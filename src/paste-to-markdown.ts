@@ -1,7 +1,6 @@
 import { execSync } from "child_process";
 import { Clipboard, getPreferenceValues, showHUD } from "@raycast/api";
 import TurndownService from "turndown";
-import { gfm } from "turndown-plugin-gfm";
 
 // Define the shape of the preferences object
 interface Preferences {
@@ -9,7 +8,6 @@ interface Preferences {
   bulletListMarker: "*" | "-" | "+";
   codeBlockStyle: "indented" | "fenced";
   linkStyle: "inlined" | "referenced";
-  enableGfm: boolean;
 }
 
 async function getClipboardHTML(): Promise<string | null> {
@@ -42,10 +40,7 @@ export default async function Command() {
       linkStyle: preferences.linkStyle,
     });
 
-    // Add GFM plugin if enabled
-    if (preferences.enableGfm) {
-      turndownService.use(gfm);
-    }
+
 
     console.debug("Trying AppleScript method to get HTML...");
     const html = await getClipboardHTML();
