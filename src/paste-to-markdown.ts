@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import { Clipboard, getPreferenceValues, showHUD } from "@raycast/api";
 import TurndownService from "turndown";
 import { gfm } from "turndown-plugin-gfm";
@@ -9,6 +10,22 @@ interface Preferences {
   codeBlockStyle: "indented" | "fenced";
   linkStyle: "inlined" | "referenced";
   enableGfm: boolean;
+}
+
+async function getClipboardHTML(): Promise<string | null> {
+  // Helper function to get HTML from clipboard using AppleScript as @raycast/api clipboard does not read HTML from the clipboard properly
+  // const { html, text } = await Clipboard.read();
+
+  try {
+    const result = execSync(
+      `osascript -e 'the clipboard as «class HTML»' | perl -ne 'print chr foreach unpack("C*",pack("H*",substr($_,11,-3)))'`,
+      { encoding: "utf8", timeout: 5000 }
+    );
+    return result.trim() || null;
+  } catch (error) {
+    console.error("Failed to get HTML via AppleScript:", error);
+    return null;
+  }
 }
 
 // Main command function
@@ -30,26 +47,12 @@ export default async function Command() {
       turndownService.use(gfm);
     }
 
-    // Read content from the clipboard
-    let clipboardContent;
-    try {
-      clipboardContent = await Clipboard.read();
-    } catch (error) {
-      console.error("Failed to read clipboard:", error);
-      await showHUD("Error: Could not access clipboard.");
-      return;
-    }
-
-    const { html, text } = clipboardContent;
-
-    // Check if we have HTML content to convert
-    if (!html || html.trim() === "") {
-      // If no HTML but we have text, check if it might be plain text
-      if (text && text.trim() !== "") {
-        await showHUD("Clipboard contains plain text, no conversion needed.");
-      } else {
-        await showHUD("Clipboard does not contain formattable content.");
-      }
+    console.debug("Trying AppleScript method to get HTML...");
+    const html = await getClipboardHTML();
+    if (html && html.trim() !== "") {
+      console.debug("Found HTML via AppleScript:", html.substring(0, 100) + "...");
+    } else {
+      await showHUD("Clipboard does not contain formattable content.");
       return;
     }
 
