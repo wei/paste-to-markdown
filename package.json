@@ -11,17 +11,107 @@
       "name": "paste-to-markdown",
       "title": "Paste to Markdown",
       "description": "Instantly converts rich text or HTML content from the user's clipboard into clean, well-formatted Markdown.",
-      "mode": "no-view"
+      "mode": "no-view",
+      "alias": "pmd"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "headingStyle",
+      "title": "Heading Style",
+      "description": "Choose the style for headings in the converted Markdown",
+      "type": "dropdown",
+      "required": false,
+      "default": "atx",
+      "data": [
+        {
+          "title": "ATX (## Heading)",
+          "value": "atx"
+        },
+        {
+          "title": "Setext (Heading\\n---)",
+          "value": "setext"
+        }
+      ]
+    },
+    {
+      "name": "bulletListMarker",
+      "title": "Bullet List Marker",
+      "description": "Choose the marker for bullet lists",
+      "type": "dropdown",
+      "required": false,
+      "default": "*",
+      "data": [
+        {
+          "title": "Asterisk (*)",
+          "value": "*"
+        },
+        {
+          "title": "Hyphen (-)",
+          "value": "-"
+        },
+        {
+          "title": "Plus (+)",
+          "value": "+"
+        }
+      ]
+    },
+    {
+      "name": "codeBlockStyle",
+      "title": "Code Block Style",
+      "description": "Choose the style for code blocks",
+      "type": "dropdown",
+      "required": false,
+      "default": "fenced",
+      "data": [
+        {
+          "title": "Fenced (```)",
+          "value": "fenced"
+        },
+        {
+          "title": "Indented (4 spaces)",
+          "value": "indented"
+        }
+      ]
+    },
+    {
+      "name": "linkStyle",
+      "title": "Link Style",
+      "description": "Choose the style for links",
+      "type": "dropdown",
+      "required": false,
+      "default": "inlined",
+      "data": [
+        {
+          "title": "Inline ([text](url))",
+          "value": "inlined"
+        },
+        {
+          "title": "Referenced ([text][ref])",
+          "value": "referenced"
+        }
+      ]
+    },
+    {
+      "name": "enableGfm",
+      "label": "Enable GitHub Flavored Markdown",
+      "description": "Enable support for tables, strikethrough, and task lists",
+      "type": "checkbox",
+      "required": false,
+      "default": true
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.100.2",
-    "@raycast/utils": "^1.17.0"
+    "@raycast/utils": "^1.17.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
+    "@types/turndown": "^5.0.5",
     "eslint": "^9.22.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
