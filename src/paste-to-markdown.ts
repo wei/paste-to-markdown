@@ -1,29 +1,45 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 import { Clipboard, getPreferenceValues, showHUD } from "@raycast/api";
 import TurndownService from "turndown";
 
 // Define the shape of the preferences object
 interface Preferences {
   headingStyle: "setext" | "atx";
+  hr: string;
   bulletListMarker: "*" | "-" | "+";
   codeBlockStyle: "indented" | "fenced";
+  fence: "```" | "~~~";
+  emDelimiter: "_" | "*";
+  strongDelimiter: "**" | "__";
   linkStyle: "inlined" | "referenced";
+  linkReferenceStyle: "full" | "collapsed" | "shortcut";
 }
 
-async function getClipboardHTML(): Promise<string | null> {
+async function getClipboardHTML(): Promise<string> {
   // Helper function to get HTML from clipboard using AppleScript as @raycast/api clipboard does not read HTML from the clipboard properly
-  // const { html, text } = await Clipboard.read();
+  // const { html } = await Clipboard.read();
+  let clipboardContent = "";
 
   try {
     const result = execSync(
       `osascript -e 'the clipboard as «class HTML»' | perl -ne 'print chr foreach unpack("C*",pack("H*",substr($_,11,-3)))'`,
-      { encoding: "utf8", timeout: 5000 }
+      { encoding: "utf8", timeout: 1000 },
     );
-    return result.trim() || null;
+    clipboardContent = result.trim();
   } catch (error) {
     console.error("Failed to get HTML via AppleScript:", error);
-    return null;
   }
+
+  // Fallback: Get plain text from the clipboard
+  if (clipboardContent === "") {
+    try {
+      clipboardContent = (await Clipboard.readText()) ?? "";
+    } catch (error) {
+      console.error("Failed to get plain text from clipboard:", error);
+    }
+  }
+
+  return clipboardContent;
 }
 
 // Main command function
@@ -35,17 +51,20 @@ export default async function Command() {
     // Initialize and configure Turndown service
     const turndownService = new TurndownService({
       headingStyle: preferences.headingStyle,
+      hr: preferences.hr,
       bulletListMarker: preferences.bulletListMarker,
       codeBlockStyle: preferences.codeBlockStyle,
+      fence: preferences.fence,
+      emDelimiter: preferences.emDelimiter,
+      strongDelimiter: preferences.strongDelimiter,
       linkStyle: preferences.linkStyle,
+      linkReferenceStyle: preferences.linkReferenceStyle,
     });
 
-
-
-    console.debug("Trying AppleScript method to get HTML...");
+    console.debug("Trying to get HTML...");
     const html = await getClipboardHTML();
-    if (html && html.trim() !== "") {
-      console.debug("Found HTML via AppleScript:", html.substring(0, 100) + "...");
+    if (html.trim() !== "") {
+      console.debug("Found HTML:", html.substring(0, 100) + "...");
     } else {
       await showHUD("Clipboard does not contain formattable content.");
       return;
@@ -70,7 +89,6 @@ export default async function Command() {
     // Paste the result and show confirmation
     try {
       await Clipboard.paste(markdown);
-      await showHUD("Pasted as Markdown");
     } catch (error) {
       console.error("Failed to paste content:", error);
       await showHUD("Error: Could not paste converted content.");

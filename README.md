@@ -1,13 +1,15 @@
-# Paste to Markdown
+![paste-to-markdown](https://socialify.git.ci/wei/paste-to-markdown/image?description=1&font=JetBrains+Mono&language=1&logo=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fwei%2Fpaste-to-markdown%2Fassets%2Fextension-icon.png&name=1&owner=1&pattern=Plus&theme=Auto)
 
-Paste to Markdown is a utility extension for Raycast that instantly converts rich text or HTML content from the user's clipboard into clean, well-formatted Markdown.
+A Raycast Extension that instantly pastes rich text or HTML content into Markdown.
+
+![Settings Screenshot](./assets/preferences-screenshot.png)
 
 ## Features
 
 - **Instant Conversion**: Convert HTML clipboard content to Markdown with a single command
 - **Smart Detection**: Automatically detects HTML content in clipboard and provides helpful feedback for plain text
 - **Customizable Output**: Configure Markdown formatting through Raycast preferences
-- **GitHub Flavored Markdown**: Support for tables, strikethrough, and task lists
+- **Comprehensive Options**: Full control over Markdown formatting with all Turndown options
 - **Robust Error Handling**: Graceful handling of edge cases with clear user feedback
 - **Command Alias**: Quick access with the `pmd` alias
 
@@ -27,10 +29,15 @@ Customize the Markdown output through Raycast's Preferences pane:
 - **ATX** (default): `## Heading`
 - **Setext**: `Heading\n---`
 
+### Horizontal Rule
+
+- **Default**: `---`
+- **Custom**: Any thematic break pattern
+
 ### Bullet List Marker
 
-- **Asterisk** (default): `*`
-- **Hyphen**: `-`
+- **Hyphen** (default): `-`
+- **Asterisk**: `*`
 - **Plus**: `+`
 
 ### Code Block Style
@@ -38,21 +45,37 @@ Customize the Markdown output through Raycast's Preferences pane:
 - **Fenced** (default): ` ```code``` `
 - **Indented**: 4-space indentation
 
+### Code Fence Style
+
+- **Backticks** (default): ` ``` `
+- **Tildes**: `~~~`
+
+### Emphasis Delimiter
+
+- **Underscore** (default): `_text_`
+- **Asterisk**: `*text*`
+
+### Strong Delimiter
+
+- **Double Asterisk** (default): `**text**`
+- **Double Underscore**: `__text__`
+
 ### Link Style
 
 - **Inline** (default): `[text](url)`
 - **Referenced**: `[text][ref]`
 
-### GitHub Flavored Markdown
+### Link Reference Style
 
-- **Enabled** (default): Supports tables, strikethrough, and task lists
-- **Disabled**: Standard Markdown only
+- **Full** (default): `[text][ref]`
+- **Collapsed**: `[text][]`
+- **Shortcut**: `[text]`
 
 ## Technical Details
 
 - Built with TypeScript for Raycast
 - Uses the [Turndown](https://github.com/mixmark-io/turndown) library for HTML-to-Markdown conversion
-- Includes [turndown-plugin-gfm](https://github.com/mixmark-io/turndown-plugin-gfm) for GitHub Flavored Markdown support
+- Supports all Turndown configuration options for maximum customization
 - Follows Raycast extension best practices and conventions
 
 ## Error Handling
