@@ -2,19 +2,6 @@ import { execSync } from "node:child_process";
 import { Clipboard, getPreferenceValues, showHUD } from "@raycast/api";
 import TurndownService from "turndown";
 
-// Define the shape of the preferences object
-interface Preferences {
-  headingStyle: "setext" | "atx";
-  hr: string;
-  bulletListMarker: "*" | "-" | "+";
-  codeBlockStyle: "indented" | "fenced";
-  fence: "```" | "~~~";
-  emDelimiter: "_" | "*";
-  strongDelimiter: "**" | "__";
-  linkStyle: "inlined" | "referenced";
-  linkReferenceStyle: "full" | "collapsed" | "shortcut";
-}
-
 async function getClipboardHTML(): Promise<string> {
   // Helper function to get HTML from clipboard using AppleScript as @raycast/api clipboard does not read HTML from the clipboard properly
   // const { html } = await Clipboard.read();
@@ -46,7 +33,7 @@ async function getClipboardHTML(): Promise<string> {
 export default async function Command() {
   try {
     // Get user preferences
-    const preferences = getPreferenceValues<Preferences>();
+    const preferences = getPreferenceValues<Preferences.PasteToMarkdown>();
 
     // Initialize and configure Turndown service
     const turndownService = new TurndownService({
@@ -89,6 +76,7 @@ export default async function Command() {
     // Paste the result and show confirmation
     try {
       await Clipboard.paste(markdown);
+      await showHUD("Pasted!");
     } catch (error) {
       console.error("Failed to paste content:", error);
       await showHUD("Error: Could not paste converted content.");

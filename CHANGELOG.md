@@ -1,6 +1,6 @@
 # Paste to Markdown Changelog
 
-## [1.0.0] - 2025-06-23
+## [Initial Release] - {PR_MERGE_DATE}
 
 ### Added
 
@@ -21,12 +21,3 @@
 - Smart clipboard content detection
 - Automatic pasting to active application
 - Enhanced preferences UI with comprehensive formatting options
-- Full TypeScript implementation following Raycast best practices
-
-### Technical Details
-
-- Built with TypeScript and Node.js
-- Uses Turndown for HTML-to-Markdown conversion
-- Follows Raycast extension guidelines and conventions
-- Comprehensive error handling for edge cases
-- ESLint and Prettier integration for code quality
